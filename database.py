@@ -7,9 +7,10 @@ from settings import settings
 SQLALCHEMY_DATABASE_URI = settings.DATABASE_URL
 
 engine = create_engine(
-    settings.SQLALCHEMY_DATABASE_URI,
-    connect_args="check_same_thread=False"
+    SQLALCHEMY_DATABASE_URI,
+    connect_args={"check_same_thread": False}
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
+TemperatureBase = declarative_base()
+CityBase = declarative_base()
