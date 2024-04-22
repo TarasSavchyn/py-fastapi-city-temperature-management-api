@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String
 
-from database import CityBase
+from database import Base
 
 
-class CityDB(CityBase):
+class CityDB(Base):
     __tablename__ = "cities"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
