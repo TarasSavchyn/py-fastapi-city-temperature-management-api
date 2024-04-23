@@ -4,7 +4,9 @@ from city.models import CityDB
 from city.schemas import CityCreate
 
 
-def get_all_cities(db: Session, ):
+def get_all_cities(
+    db: Session,
+):
     return db.query(CityDB).all()
 
 
@@ -17,3 +19,25 @@ def create_new_city(db: Session, city: CityCreate):
     db.commit()
     db.refresh(db_city)
     return db_city
+
+
+def get_city_by_id(db: Session, city_id: int):
+    return db.query(CityDB).filter(CityDB.id == city_id).first()
+
+
+def delete_city_by_id(db: Session, city_id: int):
+    city = db.query(CityDB).filter(CityDB.id == city_id).first()
+    if city:
+        db.delete(city)
+        db.commit()
+        return city
+    return None
+
+
+def update_city_by_id(db: Session, city_id: int, city: CityCreate):
+    db_city = db.query(CityDB).filter(CityDB.id == city_id).first()
+    if db_city:
+        db_city.name = city.name
+        db_city.additional_info = city.additional_info
+        db.commit()
+        return db_city
