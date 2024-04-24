@@ -27,7 +27,7 @@ def get_city_by_id(db: Session, city_id: int) -> list[Type[CityDB]]:
     return db.query(CityDB).filter(CityDB.id == city_id).first()
 
 
-def delete_city_by_id(db: Session, city_id: int) -> Optional[Type[CityDB], None]:
+def delete_city_by_id(db: Session, city_id: int) -> Optional[Type[CityDB]]:
     city = db.query(CityDB).filter(CityDB.id == city_id).first()
     if city:
         db.delete(city)

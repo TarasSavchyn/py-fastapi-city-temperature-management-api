@@ -9,6 +9,7 @@ from temperature.crud import (
     update_temperatures_in_database,
     get_temperatures_by_city
 )
+from temperature.models import TemperatureDB
 from temperature.schemas import Temperature
 
 router = APIRouter()
@@ -26,7 +27,7 @@ async def update_temperatures() -> dict:
 
 
 @router.get("/temperatures/{city_id}", response_model=list[Temperature])
-def get_temperatures_by_city(city_id: int, db: Session = Depends(get_db)) -> List[Temperature]:
+def get_temperatures_by_city_id(city_id: int, db: Session = Depends(get_db)) -> List[TemperatureDB]:
     temperatures = get_temperatures_by_city(city_id, db)
     if not temperatures:
         raise HTTPException(status_code=404, detail="Temperatures not found")

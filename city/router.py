@@ -1,4 +1,4 @@
-from typing import List, Type
+from typing import List, Type, Any
 
 from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.orm import Session
@@ -23,7 +23,7 @@ def get_cities(db: Session = Depends(get_db)) -> list[Type[CityDB]]:
 
 
 @router.post("/cities/")
-def create_city(city: CityCreate, db: Session = Depends(get_db)) -> CityDB:
+def create_city(city: CityCreate, db: Session = Depends(get_db)) -> Any:
     return create_new_city(db=db, city=city)
 
 
