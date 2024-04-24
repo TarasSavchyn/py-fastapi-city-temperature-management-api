@@ -1,13 +1,12 @@
-from typing import Optional
-
 from pydantic import BaseModel
+from datetime import datetime
 
 from city.schemas import City
 
 
 class TemperatureBase(BaseModel):
+    date_time: datetime
     temperature: float
-    date_time: str
 
 
 class TemperatureCreate(TemperatureBase):
@@ -16,8 +15,8 @@ class TemperatureCreate(TemperatureBase):
 
 class Temperature(TemperatureBase):
     id: int
-    city_id: Optional[int]
-    city: Optional[City]
+    city_id: int
+    city: City
 
     class Config:
         orm_mode = True
