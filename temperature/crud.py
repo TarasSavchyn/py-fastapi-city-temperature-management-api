@@ -30,3 +30,7 @@ async def update_temperatures_in_database():
             temperature = TemperatureDB(**temp_data)
             session.add(temperature)
         session.commit()
+
+
+def get_temperatures_by_city(city_id: int, db: Session):
+    return db.query(TemperatureDB).filter(TemperatureDB.city_id == city_id).all()
