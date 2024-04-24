@@ -1,4 +1,5 @@
 import asyncio
+from typing import Type
 
 import aiohttp
 from sqlalchemy.orm import Session
@@ -8,11 +9,11 @@ from database import SessionLocal
 from temperature.models import TemperatureDB
 
 
-def get_all_temperatures(db: Session):
+def get_all_temperatures(db: Session) -> list[Type[TemperatureDB]]:
     return db.query(TemperatureDB).all()
 
 
-async def fetch_temperature(city: CityDB):
+async def fetch_temperature(city: CityDB) -> dict:
     async with aiohttp.ClientSession() as session:
         url = f"http://api.openweathermap.org/data/2.5/weather?q={city.name}&appid=your_api_key&units=metric"
         async with session.get(url) as response:
@@ -21,7 +22,7 @@ async def fetch_temperature(city: CityDB):
             return {"city_id": city.id, "temperature": temperature}
 
 
-async def update_temperatures_in_database():
+async def update_temperatures_in_database() -> None:
     async with SessionLocal() as session:
         cities = session.query(CityDB).all()
         tasks = [fetch_temperature(city) for city in cities]
@@ -32,5 +33,5 @@ async def update_temperatures_in_database():
         session.commit()
 
 
-def get_temperatures_by_city(city_id: int, db: Session):
+def get_temperatures_by_city(city_id: int, db: Session) -> list[TemperatureDB]:
     return db.query(TemperatureDB).filter(TemperatureDB.city_id == city_id).all()

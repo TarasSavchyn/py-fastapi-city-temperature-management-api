@@ -15,18 +15,18 @@ router = APIRouter()
 
 
 @router.get("/temperatures/", response_model=List[Temperature])
-def get_temperatures(db: Session = Depends(get_db)):
+def get_temperatures(db: Session = Depends(get_db)) -> List[Temperature]:
     return get_all_temperatures(db)
 
 
 @router.post("/temperatures/update")
-async def update_temperatures():
+async def update_temperatures() -> dict:
     await update_temperatures_in_database()
     return {"message": "Temperatures updated successfully"}
 
 
 @router.get("/temperatures/{city_id}", response_model=list[Temperature])
-def get_temperatures_by_city(city_id: int, db: Session = Depends(get_db)):
+def get_temperatures_by_city(city_id: int, db: Session = Depends(get_db)) -> List[Temperature]:
     temperatures = get_temperatures_by_city(city_id, db)
     if not temperatures:
         raise HTTPException(status_code=404, detail="Temperatures not found")
