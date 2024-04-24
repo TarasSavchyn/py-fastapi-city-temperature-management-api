@@ -1,10 +1,3 @@
-"""initial
-
-Revision ID: a067975c7f68
-Revises: 
-Create Date: 2024-04-23 23:34:43.356411
-
-"""
 from typing import Sequence, Union
 
 from alembic import op
@@ -41,7 +34,9 @@ def upgrade() -> None:
         ),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_index(op.f("ix_temperatures_id"), "temperatures", ["id"], unique=False)
+    op.create_index(op.f(
+        "ix_temperatures_id"),
+        "temperatures", ["id"], unique=False)
     # ### end Alembic commands ###
 
 

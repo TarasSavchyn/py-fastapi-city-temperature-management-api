@@ -44,7 +44,9 @@ def delete_city(city_id: int, db: Session = Depends(get_db)) -> CityDB:
 
 
 @router.put("/cities/{city_id}", response_model=City)
-def update_city(city_id: int, city: CityCreate, db: Session = Depends(get_db)) -> CityDB:
+def update_city(
+    city_id: int, city: CityCreate, db: Session = Depends(get_db)
+) -> CityDB:
     db_city = update_city_by_id(db=db, city_id=city_id, city=city)
     if db_city is None:
         raise HTTPException(status_code=404, detail="City not found")

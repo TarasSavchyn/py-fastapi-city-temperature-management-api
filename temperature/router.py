@@ -7,7 +7,7 @@ from dependencies import get_db
 from temperature.crud import (
     get_all_temperatures,
     update_temperatures_in_database,
-    get_temperatures_by_city
+    get_temperatures_by_city,
 )
 from temperature.models import TemperatureDB
 from temperature.schemas import Temperature
@@ -20,14 +20,16 @@ def get_temperatures(db: Session = Depends(get_db)) -> List[Temperature]:
     return get_all_temperatures(db)
 
 
-@router.post("/temperatures/update")
-async def update_temperatures() -> dict:
-    await update_temperatures_in_database()
+@router.post("/temperatures/update", status_code=201)
+async def update_temperatures(db: Session = Depends(get_db)) -> dict:
+    await update_temperatures_in_database(db)
     return {"message": "Temperatures updated successfully"}
 
 
 @router.get("/temperatures/{city_id}", response_model=list[Temperature])
-def get_temperatures_by_city_id(city_id: int, db: Session = Depends(get_db)) -> List[TemperatureDB]:
+def get_temperatures_by_city_id(
+    city_id: int, db: Session = Depends(get_db)
+) -> List[TemperatureDB]:
     temperatures = get_temperatures_by_city(city_id, db)
     if not temperatures:
         raise HTTPException(status_code=404, detail="Temperatures not found")
