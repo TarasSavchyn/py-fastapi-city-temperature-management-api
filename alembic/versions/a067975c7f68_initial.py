@@ -35,8 +35,8 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(op.f(
-        "ix_temperatures_id"),
-        "temperatures", ["id"], unique=False)
+        "ix_temperatures_id"
+    ), "temperatures", ["id"], unique=False)
     # ### end Alembic commands ###
 
 
