@@ -1,5 +1,6 @@
 import asyncio
-from typing import List, Type
+from datetime import datetime
+from typing import List, Type, Optional
 
 import aiohttp
 from fastapi import APIRouter, Depends, HTTPException
@@ -8,7 +9,6 @@ from dependencies import get_db
 from temperature.crud import (
     get_all_temperatures,
     get_temperatures_by_city,
-    update_temperature,
 )
 from temperature.models import TemperatureDB
 from temperature.schemas import Temperature
@@ -46,3 +46,31 @@ async def update_temperatures(db: Session = Depends(get_db)) -> dict:
         await asyncio.gather(*tasks)
 
     return {"success": True}
+
+
+async def update_temperature(
+        session: Session,
+        db: Session,
+        temperature: TemperatureDB
+) -> None:
+    city_name = temperature.city.name
+    temperature_str = await get_online_temperature_by_city(session, city_name)
+    if temperature_str is not None:
+        temperature.temperature = float(temperature_str)
+        temperature.date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        db.commit()
+
+
+async def get_online_temperature_by_city(
+        session: Session, city_name: str,
+) -> Optional[float]:
+    url = f"https://wttr.in/{city_name}?format=%t"
+    async with session.get(url) as response:
+        if response.status == 200:
+            temperature_str = await response.text()
+            try:
+                temperature = float(temperature_str[:-2])
+                return temperature
+            except ValueError:
+                return None
+    return None

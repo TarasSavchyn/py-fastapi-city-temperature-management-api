@@ -1,4 +1,4 @@
-from typing import List, Type, Any
+from typing import List, Type
 
 from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.orm import Session
@@ -28,7 +28,10 @@ def create_city(city: CityCreate, db: Session = Depends(get_db)) -> CityDB:
 
 
 @router.get("/cities/{city_id}", response_model=City)
-def get_city(city_id: int, db: Session = Depends(get_db)) -> list[Type[CityDB]]:
+def get_city(
+        city_id: int,
+        db: Session = Depends(get_db)
+) -> list[Type[CityDB]]:
     city = get_city_by_id(db, city_id)
     if city is None:
         raise HTTPException(status_code=404, detail="City not found")
