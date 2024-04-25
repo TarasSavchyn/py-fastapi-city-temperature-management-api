@@ -23,12 +23,12 @@ def get_cities(db: Session = Depends(get_db)) -> list[Type[CityDB]]:
 
 
 @router.post("/cities/")
-def create_city(city: CityCreate, db: Session = Depends(get_db)) -> Any:
+def create_city(city: CityCreate, db: Session = Depends(get_db)) -> CityDB:
     return create_new_city(db=db, city=city)
 
 
 @router.get("/cities/{city_id}", response_model=City)
-def get_city(city_id: int, db: Session = Depends(get_db)) -> CityDB:
+def get_city(city_id: int, db: Session = Depends(get_db)) -> list[Type[CityDB]]:
     city = get_city_by_id(db, city_id)
     if city is None:
         raise HTTPException(status_code=404, detail="City not found")
@@ -36,7 +36,7 @@ def get_city(city_id: int, db: Session = Depends(get_db)) -> CityDB:
 
 
 @router.delete("/cities/{city_id}", response_model=City)
-def delete_city(city_id: int, db: Session = Depends(get_db)) -> CityDB:
+def delete_city(city_id: int, db: Session = Depends(get_db)) -> Type[CityDB]:
     db_city = delete_city_by_id(db=db, city_id=city_id)
     if db_city is None:
         raise HTTPException(status_code=404, detail="City not found")
