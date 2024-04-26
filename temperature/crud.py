@@ -1,10 +1,9 @@
-from typing import Type
 from sqlalchemy.orm import Session
 
 from temperature.models import TemperatureDB
 
 
-def get_all_temperatures(db: Session) -> list[Type[TemperatureDB]]:
+def get_all_temperatures(db: Session) -> list[TemperatureDB]:
     return db.query(TemperatureDB).all()
 
 

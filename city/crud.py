@@ -1,4 +1,4 @@
-from typing import Type, Optional
+from typing import Optional
 
 from sqlalchemy.orm import Session
 
@@ -8,7 +8,7 @@ from city.schemas import CityCreate
 
 def get_all_cities(
     db: Session,
-) -> list[Type[CityDB]]:
+) -> list[CityDB]:
     return db.query(CityDB).all()
 
 
@@ -23,11 +23,11 @@ def create_new_city(db: Session, city: CityCreate) -> CityDB:
     return db_city
 
 
-def get_city_by_id(db: Session, city_id: int) -> list[Type[CityDB]]:
+def get_city_by_id(db: Session, city_id: int) -> list[CityDB]:
     return db.query(CityDB).filter(CityDB.id == city_id).first()
 
 
-def delete_city_by_id(db: Session, city_id: int) -> Optional[Type[CityDB]]:
+def delete_city_by_id(db: Session, city_id: int) -> Optional[CityDB]:
     city = db.query(CityDB).filter(CityDB.id == city_id).first()
     if city:
         db.delete(city)

@@ -1,4 +1,4 @@
-from typing import List, Type
+from typing import List
 
 from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.orm import Session
@@ -18,12 +18,12 @@ router = APIRouter()
 
 
 @router.get("/cities/", response_model=List[City])
-def get_cities(db: Session = Depends(get_db)) -> list[Type[CityDB]]:
+def get_cities(db: Session = Depends(get_db)) -> list[CityDB]:
     return get_all_cities(db)
 
 
 @router.post("/cities/")
-def create_city(city: CityCreate, db: Session = Depends(get_db)) -> Type[CityDB]:
+def create_city(city: CityCreate, db: Session = Depends(get_db)) -> City:
     return create_new_city(db=db, city=city)
 
 
@@ -31,7 +31,7 @@ def create_city(city: CityCreate, db: Session = Depends(get_db)) -> Type[CityDB]
 def get_city(
         city_id: int,
         db: Session = Depends(get_db)
-) -> list[Type[CityDB]]:
+) -> list[CityDB]:
     city = get_city_by_id(db, city_id)
     if city is None:
         raise HTTPException(status_code=404, detail="City not found")
@@ -39,7 +39,7 @@ def get_city(
 
 
 @router.delete("/cities/{city_id}", response_model=City)
-def delete_city(city_id: int, db: Session = Depends(get_db)) -> Type[CityDB]:
+def delete_city(city_id: int, db: Session = Depends(get_db)) -> CityDB:
     db_city = delete_city_by_id(db=db, city_id=city_id)
     if db_city is None:
         raise HTTPException(status_code=404, detail="City not found")
